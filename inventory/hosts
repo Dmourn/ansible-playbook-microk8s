@@ -1,0 +1,13 @@
+all:
+  children:
+    kubernetes:
+      children:
+        controlplane:
+          hosts:
+            control-plane-ubuntu.local
+        nodes:
+          hosts:
+            node-[1:2]-ubuntu.local
+    registry:
+      hosts:
+        registry-ubuntu.local

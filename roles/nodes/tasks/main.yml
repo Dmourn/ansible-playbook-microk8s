@@ -1,0 +1,15 @@
+- name: Install microk8s
+  community.general.snap:
+    name: microk8s
+    channel: 1.23/edge
+    classic: yes
+  become: yes
+
+- name: Add ansible user to microk8s group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    append: yes
+    groups: microk8s
+  register: group_appended
+  become: yes
+  notify: "reboot the machine"

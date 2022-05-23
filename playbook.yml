@@ -1,0 +1,31 @@
+---
+- name: Say hello to the hosts and update things
+  hosts: all
+  roles:
+    - common
+
+- name: Setup the kubernetes things
+  hosts: kubernetes
+  vars_files:
+    - vars/kubernetes.yml
+  roles:
+    - kubernetes
+
+- name: Setup microk8s control plane
+  hosts: controlplane
+  vars_files:
+    - vars/kubernetes.yml
+  roles:
+    - controlplane
+
+# - name: Setup microk8s nodes
+#   hosts: nodes
+#   roles:
+#     - nodes
+
+- name: Start a container registry
+  hosts: registry
+  vars_files:
+    - vars/containers.yml
+  roles:
+    - registry

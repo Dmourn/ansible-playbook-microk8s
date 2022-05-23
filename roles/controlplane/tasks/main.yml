@@ -1,0 +1,22 @@
+---
+- name: Make temp file with ip4 address
+  ansible.builtin.shell: "echo {{ ansible_default_ipv4.address }} > /tmp/address"
+
+- name: Copy ipv4 address to host
+  ansible.builtin.fetch:
+    src: /tmp/address
+    dest: ./control-plane-address
+    flat: yes
+
+- name: Enable microk8s plugins
+  ansible.builtin.command: "microk8s enable {{ item }}"
+  loop: "{{ microk8s_plugins }}"
+  register: plugins_enabled
+  changed_when: "'already enabled' not in plugins_enabled.stdout"
+
+- name: Copy client.config to localhost
+  ansible.builtin.fetch:
+    src: /var/snap/microk8s/current/credentials/client.config
+    dest: ./kube.config
+    flat: no
+

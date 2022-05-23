@@ -1,0 +1,31 @@
+---
+- name: Install docker to registry machine
+  ansible.builtin.apt:
+    state: present
+    pkg: 
+    - docker.io
+    - python3-docker
+  become: yes
+
+- name: Add user to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    append: yes
+    groups: docker
+  become: yes
+  register: docker_group_added
+
+- name: Reboot when group added
+  reboot:
+  become: yes
+  when: docker_group_added.changed
+
+- name: Run a container registry using docker
+  community.docker.docker_container:
+    name: "{{ registry_name }}"
+    image: docker.io/library/registry
+    ports:
+      - "5000:5000"
+    volumes:
+      - registry:/var/lib/registry
+

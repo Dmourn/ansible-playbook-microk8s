@@ -1,0 +1,11 @@
+#!/bin/bash
+
+ANSIBLE_USER=auser
+CONTROLLER="control-plane-ubuntu.local"
+HOSTS="node-1-ubuntu.local node-2-ubuntu.local"
+
+set -ex
+for host in ${HOSTS}; do
+       res="$(ssh auser@${CONTROLLER} 'microk8s.add-node' | grep 'microk8s join .* --worker' )"
+       ssh $ANSIBLE_USER@${host} "$res"
+done

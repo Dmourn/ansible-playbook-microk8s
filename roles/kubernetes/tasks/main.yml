@@ -1,0 +1,38 @@
+---
+- name: Install microk8s
+  community.general.snap:
+    name: microk8s
+    channel: 1.23/edge
+    classic: yes
+  become: yes
+
+- name: Add ansible user to microk8s group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    append: yes
+    groups: microk8s
+  become: yes
+  register: microk8s_group_added
+
+- name: Reboot when group added
+  reboot:
+  become: yes
+  when: microk8s_group_added.changed
+
+- name: Add our **INSECURE LOCAL** container registry directory to microk8s
+  ansible.builtin.file:
+    path: /var/snap/microk8s/current/args/certs.d/{{ registry_host }}
+    state: directory
+    owner: root
+    group: microk8s
+    mode: 0770
+  become: yes
+  
+- name: Add our **INSECURE LOCAL** container registry hosts.toml
+  ansible.builtin.template:
+    src: files/hosts.toml.j2
+    dest: /var/snap/microk8s/current/args/certs.d/{{ registry_host }}/hosts.toml
+    owner: root
+    group: microk8s
+    mode: 0660
+  become: yes

@@ -1,0 +1,6 @@
+
+client.config
+config
+controller-address
+kube.config/*
+ansible.log

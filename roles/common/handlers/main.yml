@@ -1,0 +1,5 @@
+---
+- name: Reboot if upgraded
+  reboot:
+  listen: "reboot the machine"
+  become: yes

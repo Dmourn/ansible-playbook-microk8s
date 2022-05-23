@@ -1,0 +1,5 @@
+---
+registry_host: "registry-ubuntu.local:5000"
+microk8s_plugins: 
+  - dns 
+  - ingress

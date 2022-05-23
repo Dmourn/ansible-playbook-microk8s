@@ -1,0 +1,4 @@
+- name: Reboot to restart the services :)
+  reboot:
+  become: yes
+  listen:  "reboot the machine"

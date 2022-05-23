@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -ex
+
+KUBE_CONFIG_PATH=./kube.config/control-plane-ubuntu.local/var/snap/microk8s/current/credentials/client.config
+
+CONTROL_PLANE_ADDR=$(cat ./control-plane-address)
+
+sed -i "s/127.0.0.1/${CONTROL_PLANE_ADDR}/g" ${KUBE_CONFIG_PATH}

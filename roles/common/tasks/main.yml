@@ -1,0 +1,19 @@
+---
+- name: Pinging hosts
+  ansible.builtin.ping:
+
+- name: Apt update and upgrade
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+  register: apt_update_status
+  become: yes
+  changed_when: "'0 not upgraded' not in apt_update_status.stdout"
+  notify: "reboot the machine"
+
+- name: Snap refresh
+  ansible.builtin.command: "snap refresh"
+  become: yes
+  register: snap_refresh_status
+  changed_when: "'All snaps up to date.' not in snap_refresh_status.stderr"
